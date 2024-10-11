@@ -30,7 +30,7 @@ jobs:
 
     - name: Copy file to EC2 using SCP with password
       run: |
-          sshpass -p ?4t6SJ=&MWJM@bFN!A*FE@fGHQ0fRggu scp -o StrictHostKeyChecking=no -i ec2_key.pem ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
+          sshpass -p ${{ secrets.DEV_EC2_PASSWORD }} scp -o StrictHostKeyChecking=no -i ec2_key.pem ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
 
 
     

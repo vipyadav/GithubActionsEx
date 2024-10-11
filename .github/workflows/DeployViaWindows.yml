@@ -49,29 +49,10 @@ jobs:
          icacls $privateKeyPath /inheritance:r /grant:r "$env:USERNAME:F" /c
          icacls $privateKeyPath /setowner "$env:USERNAME" /c
 
-    - name: Install Chocolatey
-      run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force;
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-  
-    - name: Install sshpass
-      run: |
-          choco install sshpass
-
-    - name: Deploy to Server
-      run: |
-          $sshDir = "$env:USERPROFILE\.ssh"
-          $privateKeyPath = "$sshDir\ec2-key.pem"
-          sshpass -p ?4t6SJ=&MWJM@bFN!A*FE@fGHQ0fRggu scp -i $privateKeyPath ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting/
-      env:
-          SSH_PASSWORD: ?4t6SJ=&MWJM@bFN!A*FE@fGHQ0fRggu
-          SSH_KEY_PATH: $privateKeyPath 
-    
     - name: Copy file to EC2 using SCP
       shell: bash
       run: |
+           echo $ ($HOME/.ssh/ec2-key.pem)
            scp -i "$HOME/.ssh/ec2-key.pem" ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
     
     
@@ -81,7 +62,7 @@ jobs:
          $KeyFile = "$env:USERPROFILE\.ssh\ec2-key.pem"
          $EC2User = "Administrator"
          $EC2Host = "107.22.3.238"
-         $Password = "?4t6SJ=&MWJM@bFN!A*FE@fGHQ0fRggu"  
+         $Password = "${{ secrets.DEV_EC2_PASSWORD }}"  
 
          try {
 
