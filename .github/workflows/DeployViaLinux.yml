@@ -30,9 +30,14 @@ jobs:
 
     - name: Copy file to EC2 using SCP with password
       run: |
-          sshpass -p ${{ secrets.DEV_EC2_PASSWORD }} scp -o StrictHostKeyChecking=no -i ec2_key.pem ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
+          sshpass -p "${{ secrets.DEV_EC2_PASSWORD }}" scp -o StrictHostKeyChecking=no -i ec2-key.pem ./deployToIIS.ps1 ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:C:/GithubTesting
 
-
+    env:
+      EC2_USER: ${{ secrets.DEV_EC2_USER }}
+      EC2_HOST: ${{ secrets.DEV_EC2_HOST }}
+      EC2_PASSWORD: ${{ secrets.DEV_EC2_PASSWORD }}
+    
+    
     
     # - name: Upload to EC2
     #   uses: p3infusion/ssh-deploy@v1

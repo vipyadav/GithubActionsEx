@@ -52,7 +52,7 @@ jobs:
     - name: Copy file to EC2 using SCP
       shell: bash
       run: |
-           echo $ ($HOME/.ssh/ec2-key.pem)
+           echo $HOME
            scp -i "$HOME/.ssh/ec2-key.pem" ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
     
     
