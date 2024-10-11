@@ -1,0 +1,56 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Build and Deploy to EC2 With ubuntu
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    # stores the SSH private key into the ec2_key.pem file on the GitHub runner
+    - name: Install SSH key
+      run: |
+         echo "${{ secrets.DEV_SSH_KEY }}" > ec2_key.pem
+         chmod 600 ec2_key.pem
+    
+    - name: Install sshpass
+      run: sudo apt-get install sshpass
+
+    - name: Copy file to EC2 using SCP with password
+      run: |
+          sshpass -p ?4t6SJ=&MWJM@bFN!A*FE@fGHQ0fRggu scp -o StrictHostKeyChecking=no -i ec2_key.pem ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
+
+
+    
+    # - name: Upload to EC2
+    #   uses: p3infusion/ssh-deploy@v1
+    #   with:
+    #        ssh-private-key: ${{ secrets.DEV_SSH_KEY }}
+    #        remote-destination: C:\GithubTesting
+    #        local-path: ./deployToIIS.ps1
+    #        server-user: Administrator
+    #        server-host: http://ec2-107-22-3-238.compute-1.amazonaws.com
+    #        server-path: C:\GithubTesting
+
+    - name: Copy PowerShell script to EC2
+      run: |
+         scp -i ec2_key.pem ./deployToIIS.ps1 Administrator@107.22.3.238:C:/GithubTesting/
+
+    - name: Execute PowerShell script on EC2
+      run: |
+         ssh -i ec2_key.pem -o "StrictHostKeyChecking=no" Administrator@107.22.3.238 "powershell.exe -ExecutionPolicy Bypass -File C:/GithubTesting/deploy.ps1"
+ 
+
+      
