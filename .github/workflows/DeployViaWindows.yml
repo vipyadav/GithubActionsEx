@@ -49,14 +49,10 @@ jobs:
          icacls $privateKeyPath /inheritance:r /grant:r "$env:USERNAME:F" /c
          icacls $privateKeyPath /setowner "$env:USERNAME" /c
 
-    - name: Copy file to EC2 using SCP
-      shell: bash
-      run: |
-           echo $($HOME)
-           $sshDir = "$env:USERPROFILE\.ssh"
-           $privateKeyPath = "$sshDir\ec2-key.pem"
-           scp -i "$privateKeyPath" ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
-           scp -i "$HOME/.ssh/ec2-key.pem" ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
+    # - name: Copy file to EC2 using SCP
+    #   shell: bash
+    #   run: |
+    #        scp -i "$HOME/.ssh/ec2-key.pem" ./deployToIIS.ps1 Administrator@107.26.3.232:C:/GithubTesting
     
     
     - name: Set up PowerShell session to EC2
