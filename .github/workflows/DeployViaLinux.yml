@@ -25,6 +25,9 @@ jobs:
          echo "${{ secrets.DEV_SSH_KEY }}" > ec2_key.pem
          chmod 600 ec2_key.pem
     
+    - name: Verify PEM file exists
+      run: ls -la
+
     - name: Install sshpass
       run: sudo apt-get install sshpass
 
