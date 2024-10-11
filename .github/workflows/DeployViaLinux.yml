@@ -18,18 +18,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Install sshpass
+      run: sudo apt-get install sshpass
     
     # stores the SSH private key into the ec2_key.pem file on the GitHub runner
     - name: Install SSH key
       run: |
          echo "${{ secrets.DEV_SSH_KEY }}" > ec2_key.pem
-         chmod 600 ec2_key.pem
+         chmod 400 ec2_key.pem
     
     - name: Verify PEM file exists
       run: ls -la
 
-    - name: Install sshpass
-      run: sudo apt-get install sshpass
+    
 
     - name: Copy file to EC2 using SCP with password
       run: |
